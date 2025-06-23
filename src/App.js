@@ -1,25 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+
+import React, { useEffect, useState } from "react";
+import Card from "./Components/Card";
+
+const styles = {
+  container: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 20px",
+    marginTop: "30px",
+  },
+  cardWrapper: {
+    display: "flex",
+    flexWrap: "wrap",
+    border: "1px solid black",
+    width: "12%",
+    padding: "10px",
+  },
+};
+
+const App = () => {
+  const [countries, setCountries] = useState([]);
+
+  const fetchCountries = async () => {
+    try {
+      const response = await fetch("https://xcountries-backend.azurewebsites.net/all");
+      const data = await response.json();
+      const dataWithIds = data.map((item, index) => ({
+        ...item,
+        id: index + 1,
+      }));
+      setCountries(dataWithIds);
+    } catch (error) {
+      console.error("Failed to fetch countries:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={styles.container}>
+      {countries.map((country) => (
+        <div key={country.id} style={styles.cardWrapper}>
+          <Card flag={country.flag} name={country.name} />
+        </div>
+      ))}
     </div>
   );
-}
+};
 
 export default App;
+
