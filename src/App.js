@@ -34,7 +34,7 @@ const App = () => {
       }));
       setCountries(dataWithIds);
     } catch (error) {
-      console.error("Failed to fetch countries:", error);
+      console.error("Error fetching data:", error);
     }
   };
 
